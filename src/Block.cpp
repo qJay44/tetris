@@ -27,9 +27,9 @@ Block::Block(Shape shape) : shape(shape) {
     if (mat[i]) {
       sf::RectangleShape rect(sf::Vector2f(CELL_SIZE, CELL_SIZE));
       rect.setPosition(sf::Vector2f(initPosition.x + (i % 4) * CELL_SIZE, initPosition.y + (i >> 2) * CELL_SIZE));
-      rect.setOutlineColor({200, 200, 200});
-      rect.setOutlineThickness(1.f); // Looks weird if not "rectanglish" shape
       rect.setFillColor(color);
+      rect.setOutlineColor(sf::Color::White);
+      rect.setOutlineThickness(1.f);
       rects.push_back(rect);
     }
   }
@@ -51,12 +51,12 @@ void Block::move(const Grid& grid, sf::Vector2i dir) {
     sf::Vector2i pos(rect.getPosition());
     pos.x = pos.x + CELL_SIZE * dir.x;
 
-    if (grid.hasBlockAt(pos))
+    if (pos.x < 0 || pos.x > WIDTH - CELL_SIZE || grid.hasBlockAt(pos / CELL_SIZE))
       return;
 
     pos.y = pos.y + CELL_SIZE * dir.y;
 
-    if (grid.hasBlockAt(pos))
+    if (pos.y < 0 || pos.y > HEIGHT - CELL_SIZE || grid.hasBlockAt(pos / CELL_SIZE))
       return;
 
     rect.setPosition(sf::Vector2f(pos));
@@ -73,7 +73,7 @@ bool Block::fall(const Grid& grid, float dt) {
     sf::Vector2i pos(rect.getPosition());
     pos.y = (pos.y + CELL_SIZE * (int)(accumulation));
 
-    if (grid.hasBlockAt(pos))
+    if (pos.y >= HEIGHT || grid.hasBlockAt(pos / CELL_SIZE))
       return false;
 
     rect.setPosition(sf::Vector2f(pos));
