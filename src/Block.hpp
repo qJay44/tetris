@@ -1,21 +1,16 @@
 #include "pch.h"
 #include "Grid.hpp"
-
-enum Shape {
-  L_BLOCK,
-  O_BLOCK
-};
+#include "Shape.hpp"
 
 class Block : public sf::Drawable, public sf::Transformable {
   const sf::Vector2i initPosition{WIDTH / 2, 0};
 
-  sf::Color color;
   std::list<sf::RectangleShape> rects;
   Shape shape;
   float accumulation = 0.f;
 
 public:
-  Block(Shape shape);
+  Block();
 
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

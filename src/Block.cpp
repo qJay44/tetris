@@ -1,40 +1,19 @@
 #include "Block.hpp"
 
-Block::Block(Shape shape) : shape(shape) {
-  int* mat;
-  switch (shape) {
-    case L_BLOCK:
-      mat = new int[16] {
-        1, 0, 0, 0,
-        1, 0, 0, 0,
-        1, 1, 0, 0,
-        0, 0, 0, 0
-      };
-      color = sf::Color::Blue;
-      break;
-    case O_BLOCK:
-      mat = new int[16] {
-        1, 1, 0, 0,
-        1, 1, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0
-      };
-      color = sf::Color::Yellow;
-      break;
-  }
+Block::Block() {
+  sf::Color color = sf::Color(shape.getColor());
+  const int* mat = shape.getMatrix();
 
   for (int i = 0; i < 16; i++) {
     if (mat[i]) {
       sf::RectangleShape rect(sf::Vector2f(CELL_SIZE, CELL_SIZE));
       rect.setPosition(sf::Vector2f(initPosition.x + (i % 4) * CELL_SIZE, initPosition.y + (i >> 2) * CELL_SIZE));
       rect.setFillColor(color);
-      rect.setOutlineColor(sf::Color::White);
+      rect.setOutlineColor({40, 40, 40});
       rect.setOutlineThickness(1.f);
       rects.push_back(rect);
     }
   }
-
-  delete mat;
 }
 
 void Block::draw(sf::RenderTarget& target, sf::RenderStates states) const {

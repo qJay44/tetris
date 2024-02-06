@@ -1,10 +1,12 @@
 #include "Block.hpp"
 
+constexpr char inputDelay = 100;
+
 int main() {
   sf::RenderWindow window;
   sf::Font font;
   sf::Clock clock;
-  sf::Clock inputDelay;
+  sf::Clock inputDelayClock;
 
   // Setup main window
   window.create(sf::VideoMode(WIDTH, HEIGHT), "Template text", sf::Style::Close);
@@ -20,8 +22,7 @@ int main() {
   emptyRect.setOutlineColor({40, 40, 40});
   emptyRect.setOutlineThickness(1.f);
 
-  Shape shapes[2] = {L_BLOCK, O_BLOCK};
-  Block* block = new Block(O_BLOCK);
+  Block* block = new Block();
   Grid grid(emptyRect);
 
   while (window.isOpen()) {
@@ -35,21 +36,31 @@ int main() {
           case sf::Keyboard::Q:
             window.close();
             break;
+          case sf::Keyboard::R:
+            grid.reset();
+            delete block; block = new Block();
+            break;
           default:
             break;
         }
       }
     }
-    int d = inputDelay.getElapsedTime().asMilliseconds();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && d >= 100) {block->move(grid, {-1, 0}); inputDelay.restart();}
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && d >= 100) {block->move(grid, {0, 1}); inputDelay.restart();}
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && d >= 100) {block->move(grid, {1, 0}); inputDelay.restart();}
 
-    if (!block->fall(grid, clock.restart().asSeconds()))
+    int d = inputDelayClock.getElapsedTime().asMilliseconds();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && d >= inputDelay) {block->move(grid, {-1, 0}); inputDelayClock.restart();}
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && d >= inputDelay) {block->move(grid, {0, 1}); inputDelayClock.restart();}
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && d >= inputDelay) {block->move(grid, {1, 0}); inputDelayClock.restart();}
+
+    if (!block->fall(grid, clock.restart().asSeconds())) {
+      // If fell and it is not the same place as spawned
       if (block->getRectangles().front().getPosition().y != 0) {
         grid.update(block->getRectangles());
-        delete block; block = new Block(shapes[1]);
+        delete block; block = new Block();
+      } else {
+        grid.reset();
+        delete block; block = new Block();
       }
+    }
 
     window.clear({20, 20, 20});
     window.draw(grid);

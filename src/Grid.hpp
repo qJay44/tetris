@@ -12,9 +12,9 @@ public:
   Grid(const sf::RectangleShape& emptyRectTemplate);
 
   bool hasBlockAt(sf::Vector2i coords) const;
-  bool hasBlockAt(int index) const;
 
-  void update(const std::list<sf::RectangleShape>& blocks);
+  void update(const std::list<sf::RectangleShape>& block);
+  void reset();
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
