@@ -9,7 +9,7 @@ int main() {
   sf::Clock inputDelayClock;
 
   // Setup main window
-  window.create(sf::VideoMode(WIDTH, HEIGHT), "Template text", sf::Style::Close);
+  window.create(sf::VideoMode(WIDTH, HEIGHT), "Tetris", sf::Style::Close);
   window.setFramerateLimit(90);
 
   // Font for some test text
@@ -74,3 +74,4 @@ int main() {
 
   return 0;
 }
+

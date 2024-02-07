@@ -41,6 +41,7 @@ void Block::move(const Grid& grid, sf::Vector2i dir) {
   rects = nextPosRects;
 }
 
+// Only trying to rotate it once
 void Block::rotate(const Grid& grid, bool clockwise) {
   // Copy this block properties
   Block nextBlock = *this;
@@ -71,7 +72,6 @@ void Block::rotate(const Grid& grid, bool clockwise) {
   }
 
   // Apply new propeties to this block
-  rects.clear();
   rects = nextBlock.rects;
   shape.setMatrix(nextShape);
 }

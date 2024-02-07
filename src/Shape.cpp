@@ -24,58 +24,34 @@ constexpr sf::Uint32 shapes[7] {
 };
 
 void Shape::Matrix::rotate(bool clockwise) {
-  bool newMat[16]{0};
+  bool nextMat[16]{0};
   int farestRect = 0;
 
-  if (clockwise) {
-    // Matrix transpose
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4; j++) {
-        newMat[i * 4 + j] = m[j * 4 + i];
-        if (newMat[i * 4 + j])
-          farestRect = std::max(farestRect, j);
-      }
+  // Matrix transpose
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      nextMat[i * 4 + j] = m[j * 4 + i];
+      if (nextMat[i * 4 + j])
+        farestRect = std::max(farestRect, clockwise ? j : i);
     }
-    // Swap first and last columns
-    for (int i = 0; i < 4; i++) {
-      int left = newMat[i * 4 + 0];
-      int right = newMat[i * 4 + farestRect];
-      newMat[i * 4 + 0] = right;
-      newMat[i * 4 + farestRect] = left;
-    }
-  } else {
-    // TODO:
-    // Matrix transpose
-    /* for (int i = 0; i < 4; i++) { */
-    /*   for (int j = 0; j < 4; j++) { */
-    /*     newMat[i * 4 + j] = m[j * 4 + i]; */
-    /*     if (newMat[i * 4 + j]) */
-    /*       farestRect = std::max(farestRect, i); */
-    /*   } */
-    /* } */
-    /* printf("fRect: %d", farestRect); */
+  }
 
-    // Swap first and last rows
-    /* for (int j = 0; j < 4; j++) { */
-    /*   int above = newMat[0 + j]; */
-    /*   int under = newMat[farestRect + j]; */
-    /*   newMat[0 + j] = under; */
-    /*   newMat[farestRect + j] = under; */
-    /* } */
+  // Swap first and last sides (columns or rows)
+  for (int z = 0; z < 4; z++) {
+    int aIndex = clockwise ? z * 4 : z;
+    int bIndex = clockwise ? z * 4 + farestRect : farestRect * 4 + z;
 
-    /* for (int i = 0; i < 4; i++) { */
-    /*   for (int j = 0; j < 4; j++) { */
-    /*     printf("%d", newMat[i * 4 + j]); */
-    /*   } */
-    /*   printf("\n"); */
-    /* } */
-    /* printf("\n"); */
-    return;
+    bool a = nextMat[aIndex];
+    bool b = nextMat[bIndex];
+
+    nextMat[aIndex] = b;
+    nextMat[bIndex] = a;
+
   }
 
   // Write result to the matrix
   for (int i = 0; i < 16; i++)
-    m[i] = newMat[i];
+    m[i] = nextMat[i];
 }
 
 void Shape::setMatrix(const Shape &rhs) {
