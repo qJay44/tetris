@@ -5,6 +5,7 @@
 class Grid : public sf::Drawable, public sf::Transformable {
   const sf::RectangleShape emptyRectTemplate;
   std::vector<sf::RectangleShape> grid;
+  sf::VertexArray lines{sf::Lines};
 
   sf::RectangleShape createEmptyRect(const sf::Vector2f& pos);
 

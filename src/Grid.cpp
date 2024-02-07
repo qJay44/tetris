@@ -6,13 +6,27 @@
 Grid::Grid(const sf::RectangleShape& emptyRectTemplate) : emptyRectTemplate(emptyRectTemplate) {
   grid.resize(ROWS * COLUMNS);
   grid.reserve(ROWS * COLUMNS);
+  sf::Color lineColor(40, 40, 40);
 
+  // Create empty rectangles
   for (int x = 0; x < COLUMNS; x++) {
     for (int y = 0; y < ROWS; y++) {
       sf::RectangleShape rect(emptyRectTemplate);
       rect.setPosition(sf::Vector2f(x * CELL_SIZE, y * CELL_SIZE));
       grid[IX(x, y)] = rect;
     }
+  }
+
+  // Create row lines
+  for (float y = 0; y < ROWS; y++) {
+    lines.append(sf::Vertex({0, y * CELL_SIZE}, lineColor));
+    lines.append(sf::Vertex({WIDTH, y * CELL_SIZE}, lineColor));
+  }
+
+  // Create column lines
+  for (float x = 0; x < COLUMNS; x++) {
+    lines.append(sf::Vertex({x * CELL_SIZE, 0}, lineColor));
+    lines.append(sf::Vertex({x * CELL_SIZE, HEIGHT}, lineColor));
   }
 }
 
@@ -55,7 +69,6 @@ void Grid::update(const std::list<sf::RectangleShape>& block) {
           sf::RectangleShape& prevRect = grid[IX(col, rowToMove - 1)];
 
           currRect.setFillColor(prevRect.getFillColor());
-          currRect.setOutlineColor(prevRect.getOutlineColor());
           prevRect = createEmptyRect(prevRect.getPosition());
         }
       }
@@ -72,5 +85,6 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.transform *= getTransform();
   for (const sf::RectangleShape r : grid)
     target.draw(r);
+  target.draw(lines);
 }
 

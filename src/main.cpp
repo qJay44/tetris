@@ -19,8 +19,6 @@ int main() {
 
   sf::RectangleShape emptyRect(sf::Vector2f(CELL_SIZE, CELL_SIZE));
   emptyRect.setFillColor(sf::Color::Transparent);
-  emptyRect.setOutlineColor({40, 40, 40});
-  emptyRect.setOutlineThickness(1.f);
 
   Block* block = new Block();
   Grid grid(emptyRect);
@@ -39,6 +37,12 @@ int main() {
           case sf::Keyboard::R:
             grid.reset();
             delete block; block = new Block();
+            break;
+          case sf::Keyboard::J:
+            block->rotate(grid, false);
+            break;
+          case sf::Keyboard::K:
+            block->rotate(grid, true);
             break;
           default:
             break;
@@ -63,8 +67,8 @@ int main() {
     }
 
     window.clear({20, 20, 20});
-    window.draw(grid);
     window.draw(*block);
+    window.draw(grid);
     window.display();
   }
 

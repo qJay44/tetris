@@ -2,30 +2,23 @@
 #include <map>
 
 class Shape {
-  // Names with a color value
-  enum Name {
-    O_BLOCK = 0xfef84cff,
-    I_BLOCK = 0x51e1fcff,
-    S_BLOCK = 0xe93d1eff,
-    Z_BLOCK = 0x79ae3dff,
-    L_BLOCK = 0xf69230ff,
-    J_BLOCK = 0xf16eb9ff,
-    T_BLOCK = 0x943692ff
-  };
-
   struct Matrix {
     int m[16];
+    void rotate(bool clockwise);
   };
 
-  static const Name shapes[7];
-  static const std::map<Name, Matrix> matrices;
+  static const std::map<sf::Uint32, Matrix> matrices;
 
-  const Name shape;
+  const sf::Uint32 shapeIndexColor;
+  Matrix matrix;
 
 public:
   Shape();
 
-  sf::Uint32 getColor() const; // Return const reference to enum value?
+  void rotate(bool clockwise);
+  void setMatrix(const Shape& rhs);
+
+  const sf::Uint32& getColor() const;
   const int* getMatrix() const;
 };
 

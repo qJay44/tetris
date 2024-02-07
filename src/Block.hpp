@@ -15,6 +15,7 @@ public:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
   void move(const Grid& grid, sf::Vector2i dir);
+  void rotate(const Grid& grid, bool clockwise);
 
   bool fall(const Grid& grid, float dt);
   const std::list<sf::RectangleShape>& getRectangles() const;
