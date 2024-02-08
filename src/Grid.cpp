@@ -9,22 +9,18 @@ Grid::Grid(const sf::RectangleShape& emptyRectTemplate) : emptyRectTemplate(empt
   sf::Color lineColor(40, 40, 40);
 
   // Create empty rectangles
-  for (int x = 0; x < COLUMNS; x++) {
-    for (int y = 0; y < ROWS; y++) {
-      sf::RectangleShape rect(emptyRectTemplate);
-      rect.setPosition(sf::Vector2f(x * CELL_SIZE, y * CELL_SIZE));
-      grid[IX(x, y)] = rect;
-    }
-  }
+  for (int x = 0; x < COLUMNS; x++)
+    for (int y = 0; y < ROWS; y++)
+      grid[IX(x, y)] = createEmptyRect(sf::Vector2f(x * CELL_SIZE, y * CELL_SIZE));
 
   // Create row lines
-  for (float y = 0; y < ROWS; y++) {
+  for (float y = 1; y < ROWS; y++) {
     lines.append(sf::Vertex({0, y * CELL_SIZE}, lineColor));
     lines.append(sf::Vertex({WIDTH, y * CELL_SIZE}, lineColor));
   }
 
   // Create column lines
-  for (float x = 0; x < COLUMNS; x++) {
+  for (float x = 1; x < COLUMNS; x++) {
     lines.append(sf::Vertex({x * CELL_SIZE, 0}, lineColor));
     lines.append(sf::Vertex({x * CELL_SIZE, HEIGHT}, lineColor));
   }

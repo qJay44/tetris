@@ -1,16 +1,14 @@
 #include "pch.h"
 #include <map>
+#include <array>
+
+constexpr char matrixSize = 16;
 
 class Shape {
-  struct Matrix {
-    int m[16];
-    void rotate(bool clockwise);
-  };
-
-  static const std::map<sf::Uint32, Matrix> matrices;
+  static const std::map<sf::Uint32, std::array<bool, matrixSize>> matrices;
 
   const sf::Uint32 shapeIndexColor;
-  Matrix matrix;
+  std::array<bool, matrixSize> matrix;
 
 public:
   Shape();
@@ -19,6 +17,6 @@ public:
   void setMatrix(const Shape& rhs);
 
   const sf::Uint32& getColor() const;
-  const int* getMatrix() const;
+  const bool* getMatrix() const;
 };
 

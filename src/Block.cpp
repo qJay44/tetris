@@ -2,9 +2,9 @@
 
 Block::Block() {
   sf::Color color = sf::Color(shape.getColor());
-  const int* mat = shape.getMatrix();
+  const bool* mat = shape.getMatrix();
 
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < matrixSize; i++) {
     if (mat[i]) {
       sf::RectangleShape rect(sf::Vector2f(CELL_SIZE, CELL_SIZE));
       rect.setPosition(sf::Vector2f(initPosition.x + (i % 4) * CELL_SIZE, initPosition.y + (i >> 2) * CELL_SIZE));
@@ -53,8 +53,8 @@ void Block::rotate(const Grid& grid, bool clockwise) {
   nextShape.rotate(clockwise);
 
   // Create rectangles by the new matrix shape
-  const int* mat = nextShape.getMatrix();
-  for (int i = 0; i < 16; i++) {
+  const bool* mat = nextShape.getMatrix();
+  for (int i = 0; i < matrixSize; i++) {
     if (mat[i]) {
       sf::RectangleShape rect(sf::Vector2f(CELL_SIZE, CELL_SIZE));
       rect.setPosition(sf::Vector2f(nextPos.x + (i % 4) * CELL_SIZE, nextPos.y + (i >> 2) * CELL_SIZE));

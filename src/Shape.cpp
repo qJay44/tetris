@@ -23,42 +23,11 @@ constexpr sf::Uint32 shapes[7] {
   T_BLOCK
 };
 
-void Shape::Matrix::rotate(bool clockwise) {
-  bool nextMat[16]{0};
-  int farestRect = 0;
-
-  // Matrix transpose
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
-      nextMat[i * 4 + j] = m[j * 4 + i];
-      if (nextMat[i * 4 + j])
-        farestRect = std::max(farestRect, clockwise ? j : i);
-    }
-  }
-
-  // Swap first and last sides (columns or rows)
-  for (int z = 0; z < 4; z++) {
-    int aIndex = clockwise ? z * 4 : z;
-    int bIndex = clockwise ? z * 4 + farestRect : farestRect * 4 + z;
-
-    bool a = nextMat[aIndex];
-    bool b = nextMat[bIndex];
-
-    nextMat[aIndex] = b;
-    nextMat[bIndex] = a;
-
-  }
-
-  // Write result to the matrix
-  for (int i = 0; i < 16; i++)
-    m[i] = nextMat[i];
-}
-
 void Shape::setMatrix(const Shape &rhs) {
   matrix = rhs.matrix;
 }
 
-const std::map<sf::Uint32, Shape::Matrix> Shape::matrices {
+const std::map<sf::Uint32, std::array<bool, matrixSize>> Shape::matrices {
   {O_BLOCK, {
     1, 1, 0, 0,
     1, 1, 0, 0,
@@ -106,14 +75,40 @@ const std::map<sf::Uint32, Shape::Matrix> Shape::matrices {
 Shape::Shape() : shapeIndexColor(shapes[rand() % 7]), matrix(matrices.at(shapeIndexColor)) {}
 
 void Shape::rotate(bool clockwise) {
-  matrix.rotate(clockwise);
+  bool nextMat[matrixSize]{0};
+  int farestRect = 0;
+
+  // Matrix transpose
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      nextMat[i * 4 + j] = matrix[j * 4 + i];
+      if (nextMat[i * 4 + j])
+        farestRect = std::max(farestRect, clockwise ? j : i);
+    }
+  }
+
+  // Swap first and last sides (columns or rows)
+  for (int z = 0; z < 4; z++) {
+    int aIndex = clockwise ? z * 4 : z;
+    int bIndex = clockwise ? z * 4 + farestRect : farestRect * 4 + z;
+
+    bool a = nextMat[aIndex];
+    bool b = nextMat[bIndex];
+
+    nextMat[aIndex] = b;
+    nextMat[bIndex] = a;
+  }
+
+  // Write result to the matrix
+  for (int i = 0; i < matrixSize; i++)
+    matrix[i] = nextMat[i];
 }
 
 const sf::Uint32& Shape::getColor() const {
   return shapeIndexColor;
 }
 
-const int* Shape::getMatrix() const {
-  return matrix.m;
+const bool* Shape::getMatrix() const {
+  return matrix.data();
 }
 
